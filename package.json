@@ -1,0 +1,33 @@
+{
+  "name": "website-chatbot-nam",
+  "version": "1.0.0",
+  "description": "A Macintosh-style chatbot with OpenAI integration",
+  "main": "api/chat.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": [
+    "chatbot",
+    "openai",
+    "nodejs",
+    "express",
+    "vercel",
+    "serverless"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "vercel": "^48.1.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
