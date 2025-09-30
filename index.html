@@ -9,6 +9,34 @@
 </head>
 <body>
     <div class="container">
+        <!-- Top Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-left">
+                <div class="menu-item">
+                    <span class="menu-icon">◉</span>
+                    <span class="menu-text">NAMCINTOSH</span>
+                </div>
+                <div class="menu-item dropdown" id="conversationsDropdown">
+                    <span class="menu-text">Conversations</span>
+                    <span class="dropdown-arrow">▼</span>
+                    <div class="dropdown-content" id="conversationsList">
+                        <div class="dropdown-item loading">
+                            <span class="loading-spinner"></span>
+                            <span>Loading conversations...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-right">
+                <div class="menu-item">
+                    <a href="/dashboard.html" class="menu-link">Dashboard</a>
+                </div>
+                <div class="menu-item">
+                    <button id="newChatButton" class="menu-button">New Chat</button>
+                </div>
+            </div>
+        </div>
+        
         <div class="chat-header">
             <div class="bot-avatar">
                 <div class="avatar-icon">◉</div>
@@ -18,7 +46,10 @@
                 <p>System 7.0 - Ready for conversation</p>
             </div>
             <div class="header-actions">
-                <a href="/dashboard.html" class="nav-button">View Conversations</a>
+                <div class="session-info" id="sessionInfo">
+                    <span class="session-label">Session:</span>
+                    <span class="session-id" id="currentSessionId">New</span>
+                </div>
             </div>
         </div>
         

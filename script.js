@@ -5,9 +5,14 @@ class Chatbot {
         this.chatMessages = document.getElementById('chatMessages');
         this.sessionId = null;
         this.isProcessing = false;
+        this.conversationsDropdown = document.getElementById('conversationsDropdown');
+        this.conversationsList = document.getElementById('conversationsList');
+        this.currentSessionId = document.getElementById('currentSessionId');
+        this.newChatButton = document.getElementById('newChatButton');
         
         this.initializeEventListeners();
         this.addWelcomeMessage();
+        this.loadConversations();
     }
     
     initializeEventListeners() {
@@ -31,6 +36,21 @@ class Chatbot {
         this.messageInput.addEventListener('blur', () => {
             this.messageInput.parentElement.style.boxShadow = '4px 4px 0 #000000';
             this.messageInput.parentElement.style.transform = 'translate(0, 0)';
+        });
+        
+        // New chat button
+        this.newChatButton.addEventListener('click', () => this.startNewChat());
+        
+        // Dropdown hover events
+        this.conversationsDropdown.addEventListener('mouseenter', () => {
+            this.loadConversations();
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!this.conversationsDropdown.contains(e.target)) {
+                this.conversationsDropdown.querySelector('.dropdown-content').style.display = 'none';
+            }
         });
     }
     
@@ -81,6 +101,7 @@ class Chatbot {
             
             // Store session ID for future requests
             this.sessionId = data.sessionId;
+            this.currentSessionId.textContent = data.sessionId.slice(-8);
             
             // Hide typing indicator
             this.hideTypingIndicator();
@@ -176,7 +197,124 @@ class Chatbot {
     }
     
     scrollToBottom() {
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+        this.chatMessages.scrollTo({
+            top: this.chatMessages.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+    
+    async loadConversations() {
+        try {
+            const response = await fetch('/api/sessions');
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to load conversations');
+            }
+            
+            this.displayConversations(data.sessions);
+            
+        } catch (error) {
+            console.error('Error loading conversations:', error);
+            this.conversationsList.innerHTML = `
+                <div class="dropdown-item empty">
+                    <span>Failed to load conversations</span>
+                </div>
+            `;
+        }
+    }
+    
+    displayConversations(conversations) {
+        if (conversations.length === 0) {
+            this.conversationsList.innerHTML = `
+                <div class="dropdown-item empty">
+                    <span>No conversations yet</span>
+                </div>
+            `;
+            return;
+        }
+        
+        // Sort conversations by most recent first
+        const sortedConversations = conversations.sort((a, b) => {
+            const dateA = new Date(a.updatedAt || a.createdAt);
+            const dateB = new Date(b.updatedAt || b.createdAt);
+            return dateB - dateA;
+        });
+        
+        const conversationsHTML = sortedConversations.slice(0, 10).map(conversation => {
+            const createdAt = new Date(conversation.createdAt);
+            const timeAgo = this.getTimeAgo(createdAt);
+            const preview = this.getConversationPreview(conversation);
+            const isCurrentSession = conversation.sessionId === this.sessionId;
+            
+            return `
+                <div class="dropdown-item ${isCurrentSession ? 'current' : ''}" 
+                     data-session-id="${conversation.sessionId}"
+                     onclick="chatbot.loadConversation('${conversation.sessionId}')">
+                    <div class="conversation-info">
+                        <div class="conversation-title">
+                            Session ${conversation.sessionId.slice(-8)}
+                            ${isCurrentSession ? ' (Current)' : ''}
+                        </div>
+                        <div class="conversation-preview">${preview}</div>
+                        <div class="conversation-time">${timeAgo}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        this.conversationsList.innerHTML = conversationsHTML;
+    }
+    
+    getConversationPreview(conversation) {
+        if (conversation.messageCount === 0) {
+            return 'No messages yet';
+        } else if (conversation.preview && conversation.preview !== 'No messages yet') {
+            return conversation.preview;
+        } else {
+            return `${conversation.messageCount} message${conversation.messageCount !== 1 ? 's' : ''}`;
+        }
+    }
+    
+    getTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) {
+            return 'Just now';
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `${minutes}m ago`;
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `${hours}h ago`;
+        } else {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `${days}d ago`;
+        }
+    }
+    
+    loadConversation(sessionId) {
+        // Close dropdown
+        this.conversationsDropdown.querySelector('.dropdown-content').style.display = 'none';
+        
+        // Navigate to conversation view
+        window.location.href = `/conversation-view.html?sessionId=${sessionId}`;
+    }
+    
+    startNewChat() {
+        // Clear current session
+        this.sessionId = null;
+        this.currentSessionId.textContent = 'New';
+        
+        // Clear messages
+        this.chatMessages.innerHTML = '';
+        
+        // Add welcome message
+        this.addWelcomeMessage();
+        
+        // Focus on input
+        this.messageInput.focus();
     }
     
 }

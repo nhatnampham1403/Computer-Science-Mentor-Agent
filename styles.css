@@ -56,6 +56,201 @@ body::before {
         8px 8px 0 #000000;
 }
 
+/* Menu Bar Styles */
+.menu-bar {
+    background: #f0f0f0;
+    border-bottom: 2px solid #000000;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative;
+    z-index: 10;
+}
+
+.menu-left, .menu-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+}
+
+.menu-icon {
+    font-size: 14px;
+    color: #000000;
+}
+
+.menu-text {
+    color: #000000;
+    font-weight: 500;
+}
+
+.menu-link {
+    color: #000000;
+    text-decoration: none;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.menu-link:hover {
+    background: #ffffff;
+    border: 1px solid #000000;
+    box-shadow: 2px 2px 0 #000000;
+}
+
+.menu-button {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 2px 2px 0 #000000;
+}
+
+.menu-button:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 #000000;
+}
+
+.menu-button:active {
+    transform: translate(0, 0);
+    box-shadow: 1px 1px 0 #000000;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0 #000000;
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 4px;
+}
+
+.dropdown-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: #f0f0f0;
+}
+
+.dropdown-item.loading {
+    cursor: default;
+    color: #666666;
+}
+
+.dropdown-item.empty {
+    cursor: default;
+    color: #666666;
+    font-style: italic;
+}
+
+.dropdown-item.current {
+    background: #e0f0ff;
+    border-left: 3px solid #4a90e2;
+}
+
+.dropdown-item.current:hover {
+    background: #d0e8ff;
+}
+
+.conversation-title {
+    font-weight: 500;
+    color: #000000;
+    font-size: 12px;
+}
+
+.conversation-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+}
+
+.conversation-preview {
+    font-size: 11px;
+    color: #666666;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conversation-time {
+    font-size: 10px;
+    color: #999999;
+}
+
+/* Session Info */
+.session-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.session-label {
+    color: #666666;
+    font-weight: 400;
+}
+
+.session-id {
+    color: #000000;
+    font-weight: 500;
+    font-family: monospace;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border: 1px solid #000000;
+    border-radius: 2px;
+}
+
 .chat-header {
     background: #000000;
     color: white;
@@ -156,6 +351,9 @@ body::before {
     padding: 20px;
     background: #f0f0f0;
     position: relative;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #000000 #e0e0e0;
 }
 
 .chat-container::before {
@@ -402,20 +600,44 @@ body::before {
 
 /* Scrollbar styling */
 .chat-container::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 .chat-container::-webkit-scrollbar-track {
-    background: #e0e0e0;
-    border: 2px solid #000000;
+    background: #f0f0f0;
+    border-radius: 4px;
 }
 
 .chat-container::-webkit-scrollbar-thumb {
     background: #000000;
-    border: 2px solid #ffffff;
+    border-radius: 4px;
+    border: 1px solid #ffffff;
+    transition: background-color 0.2s ease;
 }
 
 .chat-container::-webkit-scrollbar-thumb:hover {
+    background: #333333;
+}
+
+.chat-container::-webkit-scrollbar-thumb:active {
+    background: #666666;
+}
+
+/* Dropdown scrollbar */
+.dropdown-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+    background: #000000;
+    border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb:hover {
     background: #333333;
 }
 
@@ -440,6 +662,41 @@ body::before {
     .chat-header::after,
     .chat-input-container::before {
         display: none;
+    }
+    
+    /* Mobile menu adjustments */
+    .menu-bar {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .menu-left, .menu-right {
+        gap: 12px;
+    }
+    
+    .menu-text {
+        display: none;
+    }
+    
+    .menu-icon {
+        font-size: 16px;
+    }
+    
+    .dropdown-content {
+        min-width: 180px;
+        max-height: 250px;
+    }
+    
+    .conversation-title {
+        font-size: 11px;
+    }
+    
+    .conversation-preview {
+        font-size: 10px;
+    }
+    
+    .conversation-time {
+        font-size: 9px;
     }
 }
 
