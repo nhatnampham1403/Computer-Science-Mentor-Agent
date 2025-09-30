@@ -37,7 +37,7 @@ class Chatbot {
     addWelcomeMessage() {
         const welcomeMessage = {
             type: 'bot',
-            content: "Welcome to Macintosh System 7.0. I'm your digital assistant, ready to help you with any questions or tasks. How may I be of service today?"
+            content: "Welcome you to the system. I'm Nam's Assistant. How may I be of service today?"
         };
         this.addMessage(welcomeMessage);
     }
